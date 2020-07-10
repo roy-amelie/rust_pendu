@@ -2,10 +2,11 @@ use std::iter::Iterator;
 use std::io;
 
 fn main() {
-    	let secret_word = vec!["s","a","l","u","t"];
+    	let secret_word = "bonjour";
+	let bytes=secret_word.as_bytes();
 	let mut view = Vec::new();
-	for c in secret_word.iter() {
-		view.push("_");
+	for c in bytes.iter().enumerate() {
+		view.push('_');
 	}
 
 	println!("{:?}",view);
@@ -20,17 +21,23 @@ fn main() {
 		.read_line(&mut input)
 		.expect("failed to read line");
 		
-		let guess = input.chars().next().unwrap().to_string();
-		let guess_str: &str=&guess[..];
+		let guess = input.chars().next().unwrap();
 	
-	 	for c in secret_word.iter() {
-			if c == &guess_str {
-			println!("{}",c);
-			let index = secret_word.iter().position(|&x| &x == c).unwrap();
-			let old_view = std::mem::replace(&mut view[index], c);
-			println!("{}",index);	
+	 	for (i,&c) in bytes.iter().enumerate() {
+			if c as char == guess {
+			let old_view = std::mem::replace(&mut view[i], c as char);
+			println!("{}",i);	
 			}
 		}
 		println!("{:?}",&view);
+		let mut count =0;
+		for item in &view {
+			if item == &'_' {
+				count +=1;
+			}
+		}
+		if count == 0 {
+			break;
+		}
 	}
 }
